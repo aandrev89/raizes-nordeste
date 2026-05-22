@@ -1,0 +1,426 @@
+/* CSS base do projeto. Deixei tudo junto aqui enquanto a interface ainda é pequena. */
+
+/* cores, fontes e medidas que vão se repetir */
+:root {
+  --cor-principal:   #C84B11;   /* laranja queimado */
+  --cor-secundaria:  #ECAD35;   /* amarelo tapioca  */
+  --cor-escura:      #1F1D1A;   /* café / quase preto */
+  --cor-clara:       #FDF6EC;   /* manteiga de garrafa */
+  --cor-verde:       #2D6A4F;   /* verde mata */
+  --cor-texto:       #2C2C2C;
+  --cor-borda:       #E8DDD0;
+  --cor-fundo:       #F9F3EB;
+
+  --fonte-display: 'Georgia', serif;
+  --fonte-corpo:   'Segoe UI', system-ui, sans-serif;
+
+  --sombra-card: 0 2px 12px rgba(0,0,0,0.08);
+  --raio-card:   12px;
+  --raio-btn:    50px;
+}
+
+/* base */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--fonte-corpo);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  min-height: 100vh;
+  padding-bottom: 80px; /* reserva espaço pra barra fixa do carrinho no mobile */
+}
+
+/* títulos */
+h1, h2, h3 {
+  font-family: var(--fonte-display);
+  color: var(--cor-escura);
+}
+
+/* botões */
+.btn-raizes {
+  background: var(--cor-principal);
+  color: #fff;
+  border: none;
+  border-radius: var(--raio-btn);
+  font-weight: 700;
+  padding: 12px 24px;
+  width: 100%;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-raizes:hover {
+  background: #a33c0d;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-raizes:active {
+  transform: translateY(0);
+}
+
+.btn-raizes-outline {
+  background: transparent;
+  color: var(--cor-principal);
+  border: 2px solid var(--cor-principal);
+  border-radius: var(--raio-btn);
+  font-weight: 700;
+  padding: 10px 24px;
+  width: 100%;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.btn-raizes-outline:hover {
+  background: var(--cor-principal);
+  color: #fff;
+}
+
+.btn-secundario {
+  background: var(--cor-secundaria);
+  color: var(--cor-escura);
+  border: none;
+  border-radius: var(--raio-btn);
+  font-weight: 700;
+  padding: 12px 24px;
+  width: 100%;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+/* cards */
+.card-raizes {
+  background: #fff;
+  border-radius: var(--raio-card);
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--cor-borda);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-raizes:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+/* card de produto */
+.card-produto {
+  background: #fff;
+  border-radius: var(--raio-card);
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--cor-borda);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-produto img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.card-produto .produto-info {
+  padding: 10px 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-produto .produto-nome {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--cor-escura);
+  line-height: 1.3;
+}
+
+.card-produto .produto-desc {
+  font-size: 0.78rem;
+  color: #777;
+  line-height: 1.4;
+}
+
+.card-produto .produto-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-top: 1px solid var(--cor-borda);
+  background: var(--cor-clara);
+}
+
+.card-produto .produto-preco {
+  font-weight: 800;
+  color: var(--cor-principal);
+  font-size: 1rem;
+}
+
+.btn-adicionar {
+  background: var(--cor-principal);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  line-height: 1;
+}
+
+.btn-adicionar:hover   { background: #a33c0d; }
+.btn-adicionar:active  { transform: scale(0.92); }
+.btn-adicionar:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* selo sazonal */
+.badge-sazonal {
+  background: var(--cor-secundaria);
+  color: var(--cor-escura);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* campos */
+.campo-raizes {
+  border: 2px solid var(--cor-borda);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  width: 100%;
+  background: #fff;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.campo-raizes:focus {
+  border-color: var(--cor-principal);
+}
+
+/* barra fixa do carrinho no mobile */
+.barra-carrinho {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--cor-escura);
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.barra-carrinho:hover { background: #2d2a26; }
+
+.barra-carrinho span { font-size: 0.9rem; }
+
+.barra-carrinho strong {
+  font-size: 1rem;
+  color: var(--cor-secundaria);
+}
+
+/* etapas do pedido */
+.progresso-pedido {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  padding: 20px 0;
+}
+
+.progresso-pedido::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: var(--cor-borda);
+  z-index: 0;
+}
+
+.etapa-pedido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+  flex: 1;
+}
+
+.etapa-circulo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cor-borda);
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all 0.4s;
+}
+
+.etapa-circulo.concluida {
+  background: var(--cor-verde);
+  color: #fff;
+}
+
+.etapa-circulo.ativa {
+  background: var(--cor-principal);
+  color: #fff;
+  animation: pulsar 1.5s ease-in-out infinite;
+}
+
+.etapa-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #999;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.etapa-label.ativa  { color: var(--cor-principal); }
+.etapa-label.concluida { color: var(--cor-verde); }
+
+/* fidelidade */
+.card-pontos {
+  background: linear-gradient(135deg, var(--cor-escura), #3a3530);
+  color: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.card-pontos .saldo {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--cor-secundaria);
+  line-height: 1;
+}
+
+.card-pontos .nivel {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.barra-progresso-pontos {
+  background: rgba(255,255,255,0.2);
+  border-radius: 50px;
+  height: 10px;
+  margin: 16px 0 8px;
+  overflow: hidden;
+}
+
+.barra-progresso-pontos .preenchimento {
+  height: 100%;
+  background: var(--cor-secundaria);
+  border-radius: 50px;
+  transition: width 0.8s ease;
+}
+
+/* recompensa */
+.card-recompensa {
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid var(--cor-borda);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.card-recompensa.disponivel {
+  border-color: var(--cor-verde);
+  cursor: pointer;
+}
+
+.card-recompensa.disponivel:hover {
+  box-shadow: 0 4px 16px rgba(45,106,79,0.2);
+  transform: translateY(-2px);
+}
+
+.card-recompensa.bloqueada {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+
+.card-recompensa .emoji { font-size: 2rem; }
+.card-recompensa .nome  { font-weight: 700; font-size: 0.85rem; margin: 8px 0 4px; }
+.card-recompensa .custo { font-size: 0.8rem; color: var(--cor-principal); font-weight: 700; }
+
+/* consentimentos */
+.toggle-lgpd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.toggle-lgpd label { font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+.toggle-lgpd small { color: #888; font-size: 0.78rem; display: block; margin-top: 2px; }
+
+/* loading */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid var(--cor-borda);
+  border-top-color: var(--cor-principal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+/* container padrão */
+.pagina {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* divisor */
+.divisor {
+  border: none;
+  border-top: 1px solid var(--cor-borda);
+  margin: 16px 0;
+}
+
+/* desktop */
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+
+  .pagina { max-width: 720px; }
+
+  .grid-produtos {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .barra-carrinho { display: none; } /* no desktop o carrinho já aparece no topo */
+}
+
+@media (min-width: 1024px) {
+  .pagina { max-width: 960px; }
+
+  .grid-produtos {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
