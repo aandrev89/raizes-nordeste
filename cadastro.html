@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Conta — Raízes do Nordeste</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+
+  <div class="pagina" style="max-width:420px;padding-top:24px;padding-bottom:40px;">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+      <a href="login.html" style="font-size:1.4rem;text-decoration:none;">←</a>
+      <h1 style="font-size:1.3rem;margin:0;">Criar conta</h1>
+    </div>
+
+    <form id="form-cadastro" onsubmit="handleCadastro(event)">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+
+        <input type="text" id="campo-nome" class="campo-raizes"
+          placeholder="Nome completo *" required autocomplete="name">
+
+        <input type="email" id="campo-email" class="campo-raizes"
+          placeholder="Email *" required autocomplete="email">
+
+        <input type="tel" id="campo-telefone" class="campo-raizes"
+          placeholder="Telefone (opcional)" autocomplete="tel">
+
+        <div style="position:relative;">
+          <input type="password" id="campo-senha" class="campo-raizes"
+            placeholder="Senha (mínimo 6 caracteres) *" required
+            minlength="6" style="padding-right:48px;">
+          <button type="button" onclick="toggleSenha('campo-senha','btn-v1')"
+            id="btn-v1"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;font-size:1.1rem;">👁️</button>
+        </div>
+
+        <div style="position:relative;">
+          <input type="password" id="campo-confirmar" class="campo-raizes"
+            placeholder="Confirmar senha *" required style="padding-right:48px;">
+          <button type="button" onclick="toggleSenha('campo-confirmar','btn-v2')"
+            id="btn-v2"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;font-size:1.1rem;">👁️</button>
+        </div>
+
+        <hr class="divisor">
+
+        <!-- LGPD obrigatório -->
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.85rem;">
+          <input type="checkbox" id="check-lgpd" required
+            style="margin-top:2px;accent-color:var(--cor-principal);"
+            onchange="verificarBotao()">
+          <span>
+            Li e concordo com os
+            <a href="#" style="color:var(--cor-principal);">Termos de Uso</a>
+            e a
+            <a href="#" style="color:var(--cor-principal);">Política de Privacidade</a>
+            (LGPD). <strong>*</strong>
+          </span>
+        </label>
+
+        <!-- marketing opcional -->
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.85rem;">
+          <input type="checkbox" id="check-marketing"
+            style="margin-top:2px;accent-color:var(--cor-principal);">
+          <span style="color:#666;">
+            Aceito receber promoções, novidades e ofertas exclusivas por email.
+            <em>(opcional)</em>
+          </span>
+        </label>
+
+        <div id="erro-cadastro" style="display:none;color:var(--cor-principal);
+             font-size:0.85rem;padding:10px 14px;background:#fff3ee;
+             border-radius:8px;border-left:3px solid var(--cor-principal);">
+        </div>
+
+        <button type="submit" class="btn-raizes" id="btn-criar" disabled style="margin-top:4px;">
+          Criar conta
+        </button>
+
+      </div>
+    </form>
+
+    <p style="text-align:center;font-size:0.85rem;color:#888;margin-top:20px;">
+      Já tem conta?
+      <a href="login.html" style="color:var(--cor-principal);font-weight:700;">Entrar</a>
+    </p>
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    if (getUsuarioLogado()) {
+      window.location.href = "unidades.html";
+    }
+
+    function verificarBotao() {
+      const lgpd = document.getElementById("check-lgpd").checked;
+      document.getElementById("btn-criar").disabled = !lgpd;
+    }
+
+    function toggleSenha(campoId, btnId) {
+      const campo = document.getElementById(campoId);
+      const btn = document.getElementById(btnId);
+      campo.type = campo.type === "password" ? "text" : "password";
+      btn.textContent = campo.type === "password" ? "👁️" : "🙈";
+    }
+
+    function handleCadastro(e) {
+      e.preventDefault();
+      const elErro = document.getElementById("erro-cadastro");
+      const btn = document.getElementById("btn-criar");
+
+      const nome = document.getElementById("campo-nome").value.trim();
+      const email = document.getElementById("campo-email").value.trim();
+      const telefone = document.getElementById("campo-telefone").value.trim();
+      const senha = document.getElementById("campo-senha").value;
+      const confirmar = document.getElementById("campo-confirmar").value;
+      const aceitaMarketing = document.getElementById("check-marketing").checked;
+
+      if (senha !== confirmar) {
+        elErro.textContent = "As senhas não coincidem";
+        elErro.style.display = "block";
+        return;
+      }
+
+      elErro.style.display = "none";
+      btn.textContent = "Criando conta...";
+      btn.disabled = true;
+
+      setTimeout(() => {
+        const resultado = cadastrar({ nome, email, telefone, senha, aceitaMarketing });
+        if (resultado.ok) {
+          window.location.href = "unidades.html";
+        } else {
+          elErro.textContent = resultado.erro;
+          elErro.style.display = "block";
+          btn.textContent = "Criar conta";
+          btn.disabled = false;
+        }
+      }, 600);
+    }
+  </script>
+</body>
+</html>
