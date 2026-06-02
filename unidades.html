@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escolha sua Unidade — Raízes do Nordeste</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+
+  <div id="header-principal"></div>
+
+  <div class="pagina" style="padding-top:20px;">
+
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Escolha sua unidade</h2>
+    <p style="color:#888;font-size:0.85rem;margin-bottom:16px;">
+      O cardápio varia de acordo com a loja selecionada
+    </p>
+
+    <input type="text" id="busca-unidade" class="campo-raizes"
+      placeholder="🔍 Buscar por cidade ou bairro..."
+      oninput="filtrarUnidades(this.value)"
+      style="margin-bottom:16px;">
+
+    <div id="lista-unidades" style="display:flex;flex-direction:column;gap:12px;"></div>
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    renderizarHeader();
+
+    function renderizarUnidades(lista) {
+      const container = document.getElementById("lista-unidades");
+
+      if (lista.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:40px 0;color:#aaa;">
+            <div style="font-size:2rem;margin-bottom:8px;">🔍</div>
+            <p>Nenhuma unidade encontrada</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = lista
+        .map((u) => {
+          const abertaTexto = u.aberta
+            ? `<span style="color:var(--cor-verde);font-weight:700;">● Aberta agora</span>`
+            : `<span style="color:#e55;">● Fechada</span>`;
+
+          const tipoLabel = u.tipo === "reduzida"
+            ? `<span style="background:#fff3cd;color:#856404;font-size:0.7rem;
+                font-weight:700;padding:2px 8px;border-radius:20px;">Cardápio reduzido</span>`
+            : "";
+
+          return `
+          <div class="card-raizes" style="padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+              <div>
+                <div style="font-weight:700;font-size:1rem;">${u.nome}</div>
+                ${tipoLabel ? `<div style="margin-top:4px;">${tipoLabel}</div>` : ""}
+              </div>
+              ${abertaTexto}
+            </div>
+            <div style="font-size:0.82rem;color:#777;margin-bottom:4px;">📍 ${u.endereco}</div>
+            <div style="font-size:0.82rem;color:#777;margin-bottom:12px;">🕐 ${u.horario}</div>
+            <button
+              class="${u.aberta ? "btn-raizes" : "btn-raizes"}"
+              style="${u.aberta ? "" : "background:#ccc;cursor:not-allowed;"}"
+              onclick="${u.aberta ? `selecionarUnidade(${u.id})` : "void(0)"}"
+              ${u.aberta ? "" : "disabled"}>
+              ${u.aberta ? "Selecionar unidade" : "Indisponível no momento"}
+            </button>
+          </div>
+        `;
+        })
+        .join("");
+    }
+
+    function filtrarUnidades(termo) {
+      const filtradas = unidades.filter((u) =>
+        u.nome.toLowerCase().includes(termo.toLowerCase()) ||
+        u.endereco.toLowerCase().includes(termo.toLowerCase())
+      );
+      renderizarUnidades(filtradas);
+    }
+
+    function selecionarUnidade(id) {
+      const unidade = unidades.find((u) => u.id === id);
+      localStorage.setItem("unidadeSelecionada", JSON.stringify(unidade));
+      window.location.href = "cardapio.html";
+    }
+
+    renderizarUnidades(unidades);
+  </script>
+</body>
+</html>

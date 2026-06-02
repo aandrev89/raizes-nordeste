@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cardápio — Raízes do Nordeste</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+  <style>
+    .tabs-categoria {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      margin-bottom: 16px;
+    }
+    .tabs-categoria::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: #fff;
+      border: 1.5px solid var(--cor-borda);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--cor-texto);
+    }
+    .tab-btn.ativo {
+      background: var(--cor-principal);
+      border-color: var(--cor-principal);
+      color: #fff;
+    }
+
+    .grid-produtos {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-principal"></div>
+
+  <div class="pagina" style="padding-top:16px;">
+
+    <div id="info-unidade" style="margin-bottom:16px;"></div>
+
+    <!-- tabs de categoria -->
+    <div class="tabs-categoria" id="tabs-categoria"></div>
+
+    <!-- grid de produtos -->
+    <div class="grid-produtos" id="grid-produtos"></div>
+
+    <!-- espaço pra barra do carrinho não sobrepor último item -->
+    <div style="height:20px;"></div>
+  </div>
+
+  <!-- barra fixa do carrinho no mobile -->
+  <div class="barra-carrinho" id="barra-carrinho" style="display:none;"
+    onclick="window.location.href='carrinho.html'">
+    <span>🛒 <span id="barra-qtd">0</span> itens</span>
+    <strong id="barra-total">R$ 0,00 →</strong>
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    renderizarHeader();
+
+    const unidade = getUnidadeSelecionada();
+    if (!unidade) {
+      window.location.href = "unidades.html";
+    }
+
+    // mostra qual unidade está selecionada
+    document.getElementById("info-unidade").innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-weight:700;font-size:1rem;">📍 ${unidade.nome}</div>
+          <div style="font-size:0.78rem;color:#888;">${unidade.horario}</div>
+        </div>
+        <a href="unidades.html" style="font-size:0.78rem;color:var(--cor-principal);">Trocar</a>
+      </div>
+    `;
+
+    let categoriaAtiva = "todos";
+
+    // monta as tabs filtrando só categorias que essa unidade tem
+    function renderizarTabs() {
+      const container = document.getElementById("tabs-categoria");
+      const disponiveis = ["todos", ...unidade.categorias];
+
+      container.innerHTML = categorias
+        .filter((c) => disponiveis.includes(c.id))
+        .map((c) => `
+          <button class="tab-btn ${c.id === categoriaAtiva ? "ativo" : ""}"
+            onclick="trocarCategoria('${c.id}')">
+            ${c.label}
+          </button>
+        `)
+        .join("");
+    }
+
+    function trocarCategoria(id) {
+      categoriaAtiva = id;
+      renderizarTabs();
+      renderizarProdutos();
+    }
+
+    function renderizarProdutos() {
+      const grid = document.getElementById("grid-produtos");
+
+      const filtrados = produtos.filter((p) => {
+        const naUnidade = p.unidades.includes(unidade.id);
+        const naCategoria = categoriaAtiva === "todos" || p.categoria === categoriaAtiva;
+        return naUnidade && naCategoria && p.disponivel;
+      });
+
+      if (filtrados.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:40px 0;color:#aaa;">
+            <div style="font-size:2rem;">🍽️</div>
+            <p style="margin-top:8px;">Nenhum produto nessa categoria por aqui</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtrados
+        .map((p) => `
+          <div class="card-produto">
+            <div style="position:relative;">
+              <img src="${p.imagem}" alt="${p.nome}"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div style="display:none;height:140px;background:var(--cor-clara);
+                   align-items:center;justify-content:center;font-size:2rem;">
+                ${p.categoria === "cafe" ? "☕" : p.categoria === "cuscuz" ? "🌽" :
+                  p.categoria === "tapioca" ? "🫓" : p.categoria === "sucos" ? "🥤" :
+                  p.categoria === "junino" ? "🎉" : "🍮"}
+              </div>
+              ${p.sazonal ? `<span class="badge-sazonal" style="position:absolute;top:8px;left:8px;">Sazonal</span>` : ""}
+            </div>
+            <div class="produto-info">
+              <div class="produto-nome">${p.nome}</div>
+              <div class="produto-desc">${p.descricao}</div>
+            </div>
+            <div class="produto-rodape">
+              <span class="produto-preco">${formatarMoeda(p.preco)}</span>
+              <button class="btn-adicionar" onclick="adicionarEAtualizar(${p.id})" title="Adicionar">+</button>
+            </div>
+          </div>
+        `)
+        .join("");
+    }
+
+    function adicionarEAtualizar(produtoId) {
+      const produto = produtos.find((p) => p.id === produtoId);
+      adicionarItem(produto);
+      atualizarBarraCarrinho();
+      toast(`${produto.nome} adicionado!`, "sucesso");
+    }
+
+    function atualizarBarraCarrinho() {
+      const carrinho = getCarrinho();
+      const { total } = calcularTotais();
+      const qtd = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
+      const barra = document.getElementById("barra-carrinho");
+
+      barra.style.display = qtd > 0 ? "flex" : "none";
+      document.getElementById("barra-qtd").textContent = qtd;
+      document.getElementById("barra-total").textContent = `${formatarMoeda(total)} →`;
+    }
+
+    renderizarTabs();
+    renderizarProdutos();
+    atualizarBarraCarrinho();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
