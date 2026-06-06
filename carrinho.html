@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho — Raízes do Nordeste</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+  <style>
+    .btn-qtd {
+      background: var(--cor-borda);
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .btn-qtd:hover { background: #d4c8ba; }
+  </style>
+</head>
+<body>
+
+  <div id="header-principal"></div>
+
+  <div class="pagina" style="padding-top:16px;">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <a href="cardapio.html" style="font-size:1.4rem;text-decoration:none;">←</a>
+      <h2 style="font-size:1.3rem;margin:0;">Meu Carrinho</h2>
+    </div>
+
+    <!-- estado vazio -->
+    <div id="carrinho-vazio" style="display:none;text-align:center;padding:60px 0;">
+      <div style="font-size:3rem;margin-bottom:12px;">🛒</div>
+      <p style="color:#aaa;margin-bottom:20px;">Seu carrinho está vazio</p>
+      <a href="cardapio.html" class="btn-raizes" style="text-decoration:none;display:inline-block;width:auto;padding:12px 28px;">
+        Ver cardápio
+      </a>
+    </div>
+
+    <!-- itens + resumo -->
+    <div id="carrinho-itens" style="display:none;">
+
+      <div id="info-unidade" style="font-size:0.82rem;color:#888;margin-bottom:16px;"></div>
+
+      <div id="lista-carrinho"></div>
+
+      <!-- cupom -->
+      <div style="margin:16px 0;">
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="campo-cupom" class="campo-raizes"
+            placeholder="Código de cupom" style="flex:1;text-transform:uppercase;">
+          <button onclick="handleCupom()"
+            style="background:var(--cor-escura);color:#fff;border:none;
+                   border-radius:10px;padding:0 16px;font-weight:700;cursor:pointer;
+                   white-space:nowrap;">
+            Aplicar
+          </button>
+        </div>
+        <div id="feedback-cupom" style="font-size:0.82rem;margin-top:6px;display:none;"></div>
+      </div>
+
+      <hr class="divisor">
+
+      <!-- resumo financeiro -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
+          <span style="color:#666;">Subtotal</span>
+          <span id="resumo-subtotal">R$ 0,00</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
+          <span style="color:#666;">Desconto</span>
+          <span id="resumo-desconto" style="color:var(--cor-verde);">− R$ 0,00</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:1.05rem;font-weight:700;">
+          <span>Total</span>
+          <span id="resumo-total" style="color:var(--cor-principal);">R$ 0,00</span>
+        </div>
+      </div>
+
+      <!-- pontos a ganhar -->
+      <div style="background:var(--cor-clara);border-radius:10px;padding:12px;
+                  text-align:center;margin-bottom:20px;border:1px solid var(--cor-borda);">
+        <span style="font-size:0.85rem;color:#666;">
+          🌟 Você vai ganhar <strong id="resumo-pontos" style="color:var(--cor-principal);">0 pontos</strong> nesse pedido
+        </span>
+      </div>
+
+      <button class="btn-raizes" id="btn-finalizar"
+        onclick="window.location.href='pagamento.html'">
+        Finalizar pedido
+      </button>
+    </div>
+
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    renderizarHeader();
+
+    const unidade = getUnidadeSelecionada();
+    if (unidade) {
+      document.getElementById("info-unidade").textContent = `📍 ${unidade.nome}`;
+    }
+
+    renderizarCarrinho();
+
+    function handleCupom() {
+      const codigo = document.getElementById("campo-cupom").value.trim();
+      const elFeedback = document.getElementById("feedback-cupom");
+
+      if (!codigo) return;
+
+      const resultado = aplicarCupom(codigo);
+      elFeedback.style.display = "block";
+
+      if (resultado.ok) {
+        elFeedback.style.color = "var(--cor-verde)";
+        elFeedback.textContent = `✓ ${resultado.cupom.descricao}`;
+        atualizarResumo();
+      } else {
+        elFeedback.style.color = "var(--cor-principal)";
+        elFeedback.textContent = `✗ ${resultado.erro}`;
+      }
+    }
+
+    // permite aplicar cupom com Enter
+    document.getElementById("campo-cupom").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleCupom();
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
