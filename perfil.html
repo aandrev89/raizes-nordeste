@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil — Raízes do Nordeste</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+
+  <div id="header-principal"></div>
+
+  <div class="pagina" style="padding-top:16px;padding-bottom:40px;">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+      <a href="unidades.html" style="font-size:1.4rem;text-decoration:none;">←</a>
+      <h2 style="font-size:1.3rem;margin:0;">Meu Perfil</h2>
+    </div>
+
+    <!-- dados do usuário -->
+    <div class="card-raizes" style="padding:16px;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+        <div style="width:56px;height:56px;background:var(--cor-principal);border-radius:50%;
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:1.5rem;color:#fff;font-weight:700;" id="avatar-inicial">
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:1.05rem;" id="perfil-nome"></div>
+          <div style="font-size:0.82rem;color:#888;" id="perfil-email"></div>
+        </div>
+      </div>
+
+      <!-- modo visualização -->
+      <div id="modo-visualizacao">
+        <div style="font-size:0.85rem;color:#666;margin-bottom:4px;">
+          📱 <span id="perfil-telefone">Telefone não informado</span>
+        </div>
+        <div style="margin-top:12px;">
+          <a href="fidelidade.html"
+            style="display:inline-flex;align-items:center;gap:6px;
+                   background:var(--cor-clara);border:1px solid var(--cor-borda);
+                   border-radius:50px;padding:6px 14px;font-size:0.82rem;
+                   text-decoration:none;color:var(--cor-texto);">
+            🌟 Ver meus pontos
+          </a>
+        </div>
+        <button onclick="entrarModoEdicao()"
+          class="btn-raizes-outline" style="margin-top:12px;">
+          Editar dados
+        </button>
+      </div>
+
+      <!-- modo edição -->
+      <div id="modo-edicao" style="display:none;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <input type="text" id="edit-nome" class="campo-raizes" placeholder="Nome completo">
+          <input type="tel" id="edit-telefone" class="campo-raizes" placeholder="Telefone">
+          <input type="password" id="edit-senha" class="campo-raizes"
+            placeholder="Nova senha (deixe em branco para manter)" minlength="6">
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <button onclick="salvarEdicao()" class="btn-raizes" style="flex:1;">Salvar</button>
+            <button onclick="cancelarEdicao()"
+              style="flex:1;background:none;border:1.5px solid var(--cor-borda);border-radius:50px;
+                     padding:12px;cursor:pointer;font-weight:600;">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- privacidade e dados — LGPD -->
+    <div class="card-raizes" style="padding:16px;margin-bottom:20px;">
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:16px;">
+        🔒 Privacidade e Dados (LGPD)
+      </div>
+
+      <div class="toggle-lgpd">
+        <div>
+          <label for="toggle-marketing" style="font-weight:600;font-size:0.9rem;">Comunicações de Marketing</label>
+          <small>Promoções e novidades por email</small>
+        </div>
+        <input type="checkbox" id="toggle-marketing" role="switch"
+          onchange="salvarConsentimento('marketing', this.checked)"
+          style="width:42px;height:22px;accent-color:var(--cor-principal);cursor:pointer;">
+      </div>
+
+      <div class="toggle-lgpd">
+        <div>
+          <label for="toggle-personalizacao" style="font-weight:600;font-size:0.9rem;">Personalização</label>
+          <small>Usar histórico de consumo para sugestões</small>
+        </div>
+        <input type="checkbox" id="toggle-personalizacao" role="switch"
+          onchange="salvarConsentimento('personalizacao', this.checked)"
+          style="width:42px;height:22px;accent-color:var(--cor-principal);cursor:pointer;">
+      </div>
+
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+        <a href="#" style="font-size:0.85rem;color:var(--cor-principal);">
+          📄 Ver Política de Privacidade
+        </a>
+        <button onclick="baixarDados()"
+          style="background:none;border:1.5px solid var(--cor-borda);border-radius:8px;
+                 padding:10px 14px;font-size:0.85rem;cursor:pointer;text-align:left;
+                 font-weight:600;color:var(--cor-texto);">
+          💾 Baixar meus dados
+        </button>
+      </div>
+    </div>
+
+    <!-- zona de perigo -->
+    <div class="card-raizes" style="padding:16px;border-color:#ffd0c0;">
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:12px;color:#c84b11;">
+        ⚠️ Zona de risco
+      </div>
+      <button onclick="confirmarExclusao()"
+        style="background:none;border:2px solid var(--cor-principal);color:var(--cor-principal);
+               border-radius:50px;padding:10px 20px;font-size:0.85rem;cursor:pointer;
+               font-weight:700;width:100%;">
+        Excluir minha conta e dados
+      </button>
+      <p style="font-size:0.75rem;color:#aaa;margin-top:8px;text-align:center;">
+        Essa ação é irreversível. Todos os seus dados e pontos serão excluídos.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- modal de confirmação de exclusão (duas etapas) -->
+  <div id="modal-exclusao" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);
+       z-index:300;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;">
+      <h3 style="font-size:1.1rem;margin-bottom:8px;">Excluir conta?</h3>
+      <p style="font-size:0.85rem;color:#666;margin-bottom:16px;">
+        Todos os seus dados, pontos e histórico de pedidos serão permanentemente excluídos.
+      </p>
+      <p style="font-size:0.85rem;color:var(--cor-principal);font-weight:700;margin-bottom:16px;">
+        Essa ação não pode ser desfeita.
+      </p>
+      <div style="display:flex;gap:8px;">
+        <button onclick="fecharModalExclusao()"
+          style="flex:1;background:none;border:1.5px solid var(--cor-borda);border-radius:50px;
+                 padding:10px;cursor:pointer;font-weight:600;">
+          Cancelar
+        </button>
+        <button onclick="executarExclusao()"
+          style="flex:1;background:var(--cor-principal);color:#fff;border:none;
+                 border-radius:50px;padding:10px;cursor:pointer;font-weight:700;">
+          Sim, excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    renderizarHeader();
+    guardRota();
+
+    function carregarPerfil() {
+      const usuario = getUsuarioLogado();
+      if (!usuario) return;
+
+      document.getElementById("perfil-nome").textContent = usuario.nome;
+      document.getElementById("perfil-email").textContent = usuario.email;
+      document.getElementById("avatar-inicial").textContent = usuario.nome.charAt(0).toUpperCase();
+
+      if (usuario.telefone) {
+        document.getElementById("perfil-telefone").textContent = usuario.telefone;
+      }
+
+      const consentimentos = usuario.consentimentos || {};
+      document.getElementById("toggle-marketing").checked = !!consentimentos.marketing;
+      document.getElementById("toggle-personalizacao").checked = !!consentimentos.personalizacao;
+    }
+
+    function entrarModoEdicao() {
+      const usuario = getUsuarioLogado();
+      document.getElementById("edit-nome").value = usuario.nome;
+      document.getElementById("edit-telefone").value = usuario.telefone || "";
+      document.getElementById("modo-visualizacao").style.display = "none";
+      document.getElementById("modo-edicao").style.display = "block";
+    }
+
+    function cancelarEdicao() {
+      document.getElementById("modo-visualizacao").style.display = "block";
+      document.getElementById("modo-edicao").style.display = "none";
+    }
+
+    function salvarEdicao() {
+      const nome = document.getElementById("edit-nome").value.trim();
+      const telefone = document.getElementById("edit-telefone").value.trim();
+      const novaSenha = document.getElementById("edit-senha").value;
+
+      if (!nome) {
+        toast("Nome não pode ficar em branco", "erro");
+        return;
+      }
+
+      const updates = { nome, telefone };
+      if (novaSenha) updates.senha = novaSenha;
+
+      atualizarUsuarioLogado(updates);
+      cancelarEdicao();
+      carregarPerfil();
+      toast("Dados atualizados!", "sucesso");
+    }
+
+    function salvarConsentimento(tipo, valor) {
+      const usuario = getUsuarioLogado();
+      const consentimentos = { ...(usuario.consentimentos || {}), [tipo]: valor };
+      atualizarUsuarioLogado({ consentimentos });
+      toast(valor ? "Preferência ativada" : "Preferência desativada", "info");
+    }
+
+    function baixarDados() {
+      const usuario = getUsuarioLogado();
+      const dados = {
+        nome: usuario.nome,
+        email: usuario.email,
+        telefone: usuario.telefone || null,
+        pontos: usuario.pontos,
+        nivel: usuario.nivel,
+        consentimentos: usuario.consentimentos,
+        historicoPedidos: usuario.historicoPedidos || [],
+        exportadoEm: new Date().toISOString(),
+      };
+
+      const blob = new Blob([JSON.stringify(dados, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "meus-dados-raizes-nordeste.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      toast("Download iniciado!", "sucesso");
+    }
+
+    function confirmarExclusao() {
+      document.getElementById("modal-exclusao").style.display = "flex";
+    }
+
+    function fecharModalExclusao() {
+      document.getElementById("modal-exclusao").style.display = "none";
+    }
+
+    function executarExclusao() {
+      excluirConta();
+      window.location.href = "index.html";
+    }
+
+    carregarPerfil();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
