@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#F9F3EB"/>
+  <text x="200" y="140" text-anchor="middle" font-size="60">🍽️</text>
+  <text x="200" y="185" text-anchor="middle" font-size="16" fill="#aaa">Raízes do Nordeste</text>
+</svg>
